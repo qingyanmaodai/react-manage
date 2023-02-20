@@ -17,7 +17,7 @@ type MenuItem = {
 };
 
 function getItem(
-  label: React.ReactNode,
+  label: string,
   key: string,
   icon?: React.ReactNode,
   children?: MenuItem[]
@@ -31,8 +31,8 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-  getItem("Option 1", "/page1", <PieChartOutlined />),
-  getItem("Option 2", "/page2", <DesktopOutlined />),
+  getItem("Page1", "/page1", <PieChartOutlined />),
+  getItem("Page2", "/page2", <DesktopOutlined />),
   getItem("Page3", "/page3", <UserOutlined />, [
     getItem("Page301", "/page3/page301"),
     getItem("page302", "/page3/page302"),
