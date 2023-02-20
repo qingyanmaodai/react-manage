@@ -53,6 +53,15 @@ const View: React.FC = () => {
     //点击跳转到对应的路由 编程式导航跳转，利用到hook
     navigateTo(e.key);
   };
+  const [openKeys, setOpenKeys] = useState([]);
+  const handleOpenChange = (keys: never[]) => {
+    console.log(keys.length);
+
+    //keys是一个数组，记录了当前哪一项是展开的(用key来记录)
+    //什么时候执行 这个函数里面的代码?展开和回收某项菜单的时候执行这里面的代码
+    // 把这个数组修改成最后一项，因为只要一项是展开的
+    setOpenKeys([keys[keys.length - 1]]);
+  };
   return (
     <Layout style={{ minHeight: "100vh" }}>
       {/* 左边侧边栏 */}
@@ -70,10 +79,14 @@ const View: React.FC = () => {
         />
         <Menu
           theme="dark"
-          defaultSelectedKeys={["1"]}
+          defaultSelectedKeys={["/page1"]}
           mode="inline"
           items={items}
           onClick={menuClick}
+          //菜单展开和回收事件
+          onOpenChange={handleOpenChange}
+          //当前菜单展开项的keys数组
+          openKeys={openKeys}
         />
       </Sider>
       {/* 右边内容 */}
