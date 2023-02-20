@@ -53,13 +53,12 @@ const View: React.FC = () => {
     //点击跳转到对应的路由 编程式导航跳转，利用到hook
     navigateTo(e.key);
   };
-  const [openKeys, setOpenKeys] = useState([]);
-  const handleOpenChange = (keys: never[]) => {
-    console.log(keys.length);
-
+  const [openKeys, setOpenKeys] = useState<string[]>([]);
+  const handleOpenChange = (keys: string[]) => {
+    // console.log(keys);
     //keys是一个数组，记录了当前哪一项是展开的(用key来记录)
-    //什么时候执行 这个函数里面的代码?展开和回收某项菜单的时候执行这里面的代码
-    // 把这个数组修改成最后一项，因为只要一项是展开的
+    //展开和回收某项菜单的时候执行这里面的代码
+    // 把这个数组修改成最后一项，因为只要一项是展开的,keys是记录所有菜单的展开项，数组最后加进来的就是最后一项,length-1就是最后一项
     setOpenKeys([keys[keys.length - 1]]);
   };
   return (
