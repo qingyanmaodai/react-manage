@@ -1,6 +1,7 @@
 import React, { lazy } from "react";
 import { Navigate } from "react-router";
 import Home from "../views/Home";
+import Login from "../views/Login";
 const Page1 = lazy(() => import("../views/Page1"));
 const Page2 = lazy(() => import("../views/Page2"));
 const Page301 = lazy(() => import("../views/Page3/Page301"));
@@ -37,6 +38,10 @@ const routes = [
     ],
   },
   //嵌套路由结束
+  {
+    path: "/login",
+    element: <Login />,
+  },
   //访问其他路径进行重定向
   {
     path: "*",
