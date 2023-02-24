@@ -7,6 +7,7 @@ let reducer = (
     val: number;
   }
 ) => {
+  // 调用dispatch执行这里面的代码
   let newState = JSON.parse(JSON.stringify(state));
   //根据返回的action看调用存的哪种action
   for (let key in handeleNum.actions) {
