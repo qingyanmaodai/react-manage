@@ -1,19 +1,27 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { Input, Space, Button } from "antd";
+import { Input, Space, Button, message } from "antd";
 import styles from "./login.module.scss";
 import "./login.scss";
 import initLoginBg from "./init.ts";
+import { CaptchaAPI, LoginAPI } from "@/request/api";
+import { useNavigate } from "react-router-dom";
 const View = () => {
+  let navigateTo = useNavigate();
   //加载完这个组件之后
   useEffect(() => {
     initLoginBg();
     //窗口改变也进行一个初始化
-    window.onresize = function () {};
+    window.onresize = function () {
+      initLoginBg();
+    };
+    getCaptchaImg();
   }, []);
   //获取用户输入信息
   const [usernameVal, setUsernameVal] = useState(""); //定义用户输入信息这个变量
   const [passwordVal, setPasswordVal] = useState(""); //定义用户输入密码这个变量
   const [captchaVal, setCaptchaVal] = useState(""); //定义用户输入验证码这个变量
+  //定义一个变量保存验证码图片信息
+  const [captchaImg, setCaptchaImg] = useState("");
   const usernameChange = (e: ChangeEvent<HTMLInputElement>) => {
     //获取用户输入用户名
     // console.log(e.target.value);
@@ -21,13 +29,13 @@ const View = () => {
     setUsernameVal(e.target.value);
   };
   const captchaChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPasswordVal(e.target.value);
-  };
-  const passwordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setCaptchaVal(e.target.value);
   };
+  const passwordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setPasswordVal(e.target.value);
+  };
   //点击登录按钮事件
-  const goToLogin = () => {
+  const goToLogin = async () => {
     console.log(
       "用户名:",
       usernameVal,
@@ -36,6 +44,48 @@ const View = () => {
       "验证码:",
       captchaVal
     );
+    //验证输入框是否有空值
+    if (!usernameVal.trim()) {
+      message.warning("请输入用户名");
+      return;
+    }
+    if (!passwordVal.trim()) {
+      message.warning("请输入密码");
+      return;
+    }
+    if (!captchaVal.trim()) {
+      message.warning("请输入验证码");
+      return;
+    }
+    //发起登录请求
+    let loginAPIRes = await LoginAPI({
+      username: usernameVal,
+      password: passwordVal,
+      code: captchaVal,
+      uuid: localStorage.getItem("uuid") as string,
+    });
+    //账号qdtest1 密码123456
+
+    if (loginAPIRes.code === 200) {
+      //登录成功，保存token，跳转page1，删除本地uuid
+      message.success("登录成功!");
+      localStorage.setItem("token", loginAPIRes.token);
+      navigateTo("/page1");
+      localStorage.removeItem("uuid");
+    } else {
+      message.error(loginAPIRes.msg);
+    }
+  };
+  //点击验证码图片触发的接口
+  const getCaptchaImg = async () => {
+    let captchaAPIRes = await CaptchaAPI();
+    if (captchaAPIRes.code == 200) {
+      setCaptchaImg("data:image/gif;base64," + captchaAPIRes.img);
+      //本地储存uuid
+      localStorage.setItem("uuid", captchaAPIRes.uuid);
+    } else {
+      message.error(captchaAPIRes.msg);
+    }
   };
   return (
     <div className={styles.loginPage}>
@@ -55,12 +105,8 @@ const View = () => {
             <Input.Password placeholder="密码" onChange={passwordChange} />
             <div className="captchaBox">
               <Input placeholder="验证码" onChange={captchaChange} />
-              <div className="captchaImg">
-                <img
-                  height="38"
-                  src="https://himg.bdimg.com/sys/portraitn/item/public.1.eeb517fb.Nz-Wzi3poZKGqcKx7g1FqA"
-                  alt=""
-                />
+              <div className="captchaImg" onClick={getCaptchaImg}>
+                <img height="38" src={captchaImg} alt="" />
               </div>
             </div>
             <Button

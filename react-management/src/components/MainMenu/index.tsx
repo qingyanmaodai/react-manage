@@ -1,8 +1,6 @@
 import {
   DesktopOutlined,
-  FileOutlined,
   PieChartOutlined,
-  TeamOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { Menu } from "antd";
@@ -37,11 +35,6 @@ const items: MenuItem[] = [
     getItem("Page301", "/page3/page301"),
     getItem("page302", "/page3/page302"),
   ]),
-  getItem("Team", "sub2", <TeamOutlined />, [
-    getItem("Team 1", "6"),
-    getItem("Team 2", "8"),
-  ]),
-  getItem("Files", "9", <FileOutlined />),
 ];
 
 const Comp: React.FC = () => {
