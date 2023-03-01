@@ -33,7 +33,7 @@ function BeforeRouterEnter() {
     //这里不能直接使用useNavigate来跳转，因为需要BeforeRouterEnter是一个正常的JSX组件
     return <ToPage1 />;
   }
-  if (location.pathname !== "/page1" && !token) {
+  if (location.pathname !== "/login" && !token) {
     //这里不能直接使用useNavigate来跳转，因为需要BeforeRouterEnter是一个正常的JSX组件
     return <ToLogin />;
   }
@@ -44,7 +44,7 @@ function App() {
   const [count, setCount] = useState(0);
   return (
     <div className="App">
-      <BeforeRouterEnter></BeforeRouterEnter>;
+      <BeforeRouterEnter></BeforeRouterEnter>
     </div>
   );
 }

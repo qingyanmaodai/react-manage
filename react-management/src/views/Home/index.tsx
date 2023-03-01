@@ -1,14 +1,20 @@
 import React, { useState } from "react";
-import { Breadcrumb, Layout, theme } from "antd";
+import { Breadcrumb, Layout, theme, Button } from "antd";
 import { Outlet } from "react-router-dom";
 import MainMenu from "@/components/MainMenu";
 const { Header, Content, Footer, Sider } = Layout;
+import { useNavigate } from "react-router-dom";
 
 const View: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const navigateTo = useNavigate();
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+  const LeaveLogin = () => {
+    localStorage.removeItem("token");
+    navigateTo("/login");
+  };
   return (
     <Layout style={{ minHeight: "100vh" }}>
       {/* 左边侧边栏 */}
@@ -29,12 +35,24 @@ const View: React.FC = () => {
       {/* 右边内容 */}
       <Layout className="site-layout">
         {/* 右边头部 */}
-        <Header style={{ paddingLeft: "16px", background: colorBgContainer }}>
+        <Header
+          style={{
+            padding: " 0 16px",
+            background: colorBgContainer,
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
           {/* 面包屑 */}
           <Breadcrumb style={{ lineHeight: "64px" }}>
             <Breadcrumb.Item>User</Breadcrumb.Item>
             <Breadcrumb.Item>Bill</Breadcrumb.Item>
           </Breadcrumb>
+          <div>
+            <Button type="primary" size="middle" onClick={LeaveLogin}>
+              退出登录
+            </Button>
+          </div>
         </Header>
         {/* 右边内容部分-白色 */}
         <Content
